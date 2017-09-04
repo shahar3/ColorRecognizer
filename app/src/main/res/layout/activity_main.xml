@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.shaha.colorrecognizer.MainActivity"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Press on open camera, take a shoot and the app will recognize it's catalogue name"
+        android:id="@+id/descTxt"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/posTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/descTxt"
+        android:layout_margin="10dp"/>
+    <LinearLayout
+        android:id="@+id/colorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/posTxt"
+        android:orientation="horizontal"
+        android:weightSum="100">
+        <com.example.shaha.colorrecognizer.ColorPreview
+            android:id="@+id/colorBox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="15"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:orientation="vertical"
+            android:layout_margin="8dp">
+            <TextView
+                android:id="@+id/colorNameTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@android:color/black"
+                android:text="Color name"/>
+            <TextView
+                android:id="@+id/colorHexTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Color hex code"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="3dp"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/similarPopBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="35"
+            android:text="Similar colors"
+            android:layout_margin="8dp"
+            android:padding="2dp"/>
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/capImgView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/colorLayout"
+        android:scaleType="centerCrop"
+        android:layout_margin="10dp"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Open Camera"
+        android:layout_alignParentBottom="true"
+        android:onClick="openCamera"
+        android:padding="8dp"/>
+</RelativeLayout>
