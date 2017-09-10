@@ -191,9 +191,7 @@ public class MainActivity extends AppCompatActivity {
 
         //open the camera
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File file = getFile();
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-        startActivityForResult(cameraIntent, CAM_REQUEST);
+        startActivityForResult(cameraIntent, 0);
     }
 
     /**
@@ -218,30 +216,18 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String path = "sdcard/colorRecognizer/cam_img.jpg";
-        File img = new File(path);
-        //take the picture from the sdcard folder
-        BitmapFactory.Options bmpOpts = new BitmapFactory.Options();
-        Bitmap d = BitmapFactory.decodeFile(img.getAbsolutePath(), bmpOpts);
-        //resize the picture to fit the screen
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int nh = (int) (d.getHeight() * (((double) metrics.widthPixels) / d.getWidth()));
-        Bitmap scaled = Bitmap.createScaledBitmap(d, metrics.widthPixels, nh, true);
-        //rotate the image 90 degrees
-        capImgView.setImageBitmap(RotateBitmap(scaled, 90));
-        guideTxt.setVisibility(View.VISIBLE);
-    }
+        super.onActivityResult(requestCode,resultCode,data);
 
-    /**
-     * Rotate the picture (in 90 degrees in this case)
-     * @param source
-     * @param angle
-     * @return
-     */
-    public static Bitmap RotateBitmap(Bitmap source, float angle) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+        //get the picture as a bitmap
+        Bitmap bitmap = (Bitmap)data.getExtras().get("data");
+
+        //resize the picture to fit the screen
+        //DisplayMetrics metrics = new DisplayMetrics();
+        //getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        //int nh = (int) (bitmap.getHeight() * (((double) metrics.widthPixels) / bitmap.getWidth()));
+        //Bitmap scaled = Bitmap.createScaledBitmap(bitmap, metrics.widthPixels, nh, true);
+        //rotate the image 90 degrees
+        capImgView.setImageBitmap(bitmap);
+        guideTxt.setVisibility(View.VISIBLE);
     }
 }

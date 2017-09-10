@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,12 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="Press on open camera, take a shoot and the app will recognize it's catalogue name"
+        android:text="Press on open camera, take a shot and the app will recognize it's catalogue name"
         android:id="@+id/descTxt"
         android:textSize="18sp"/>
     <TextView
         android:id="@+id/guideTxt"
-        android:layout_below="@+id/descTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -26,7 +25,6 @@
         android:id="@+id/colorLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/guideTxt"
         android:orientation="horizontal"
         android:weightSum="100">
         <com.example.shaha.colorrecognizer.ColorPreview
@@ -65,18 +63,25 @@
             android:layout_margin="8dp"
             android:padding="2dp"/>
     </LinearLayout>
-    <ImageView
-        android:id="@+id/capImgView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/colorLayout"
-        android:scaleType="centerCrop"
-        android:layout_margin="10dp" />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Open Camera"
-        android:layout_alignParentBottom="true"
-        android:onClick="openCamera"
-        android:padding="8dp"/>
-</RelativeLayout>
+        android:layout_height="match_parent"
+        android:weightSum="100"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/capImgView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:layout_margin="10dp"
+            android:layout_weight="85"
+            android:src="@drawable/pic_holder"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Open Camera"
+            android:onClick="openCamera"
+            android:padding="8dp"
+            android:layout_weight="15"/>
+    </LinearLayout>
+</LinearLayout>
