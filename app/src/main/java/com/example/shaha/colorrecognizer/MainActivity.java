@@ -22,14 +22,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class MainActivity extends AppCompatActivity {
     static final int CAM_REQUEST = 1;
     ImageView capImgView;
-    TextView posTxt;
     Map<String, Colour> colorsMap = new HashMap<>();
     ColorPreview colorBox;
     TextView descTxt;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     Button similarPopBtn;
     TextView colorNameTxt;
     SimilarColors simCols;
+    TextView guideTxt;
+    int r,g,b;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //get the variables from the main screen
-        posTxt = (TextView) findViewById(R.id.posTxt);
         capImgView = (ImageView) findViewById(R.id.capImgView);
         colorBox = (ColorPreview) findViewById(R.id.colorBox);
         descTxt = (TextView) findViewById(R.id.descTxt);
@@ -53,10 +55,12 @@ public class MainActivity extends AppCompatActivity {
         colorHexTxt = (TextView) findViewById(R.id.colorHexTxt);
         similarPopBtn = (Button) findViewById(R.id.similarPopBtn);
         colorNameTxt = (TextView) findViewById(R.id.colorNameTxt);
+        guideTxt = (TextView) findViewById(R.id.guideTxt);
 
-        //hide the color layout
+        //hide the color layout and the guide layout
         colorNameTxt.setVisibility(View.GONE);
         colorLayout.setVisibility(View.GONE);
+        guideTxt.setVisibility(View.GONE);
         //read the color csv from the assets folder
         readColorCsv();
         //initiate similar colors class
@@ -83,9 +87,12 @@ public class MainActivity extends AppCompatActivity {
      * open a popup window with the similar colors of the selected pixel
      */
     private void openSimilarPopup(){
+        //look for the similar colors
+        TreeMap<Colour,Double> similarColorsMap = simCols.getSimilarColors(r,g,b);
+        ArrayList<Colour> top5Colors = new ArrayList<>(similarColorsMap.keySet());
         Intent intent = new Intent(MainActivity.this,SimilarityPop.class);
-        //calculate the colors similar to the selected pixel
-        //send the arrayList of the similar colors
+        //send the dictionary of the similar colors to the other activity
+        intent.putParcelableArrayListExtra("similarColors",top5Colors);
         //intent.putExtra()
         startActivity(intent);
     }
@@ -118,16 +125,21 @@ public class MainActivity extends AppCompatActivity {
 
         //get the color of the pixel and convert it to hex
         int pixel = bitmap.getPixel(x, y);
-        int r = Color.red(pixel);
-        int g = Color.green(pixel);
-        int b = Color.blue(pixel);
+        r = Color.red(pixel);
+        g = Color.green(pixel);
+        b = Color.blue(pixel);
         String posStr = "X: " + x + " Y: " + y+ " R: " + r + " G: " + g + " B: " + b;
 
         //create the hex value of the color
         String hex = String.format("#%02x%02x%02x", r, g, b);
-        posTxt.setText(posStr);
         colorBox.setColor(r,g,b);
         colorHexTxt.setText(hex);
+
+        //show the color layout
+        colorLayout.setVisibility(View.VISIBLE);
+
+        //hide the guide textView
+        guideTxt.setVisibility(View.GONE);
     }
 
     /**
@@ -171,7 +183,13 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void openCamera(View view) {
+        //hide the description
         descTxt.setVisibility(View.GONE);
+
+        //hide color layout
+        colorLayout.setVisibility(View.GONE);
+
+        //open the camera
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File file = getFile();
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
@@ -200,17 +218,19 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        colorLayout.setVisibility(View.VISIBLE);
         String path = "sdcard/colorRecognizer/cam_img.jpg";
         File img = new File(path);
+        //take the picture from the sdcard folder
         BitmapFactory.Options bmpOpts = new BitmapFactory.Options();
         Bitmap d = BitmapFactory.decodeFile(img.getAbsolutePath(), bmpOpts);
+        //resize the picture to fit the screen
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int nh = (int) (d.getHeight() * (((double) metrics.widthPixels) / d.getWidth()));
         Bitmap scaled = Bitmap.createScaledBitmap(d, metrics.widthPixels, nh, true);
         //rotate the image 90 degrees
         capImgView.setImageBitmap(RotateBitmap(scaled, 90));
+        guideTxt.setVisibility(View.VISIBLE);
     }
 
     /**

@@ -13,19 +13,20 @@
         android:layout_margin="10dp"
         android:text="Press on open camera, take a shoot and the app will recognize it's catalogue name"
         android:id="@+id/descTxt"
-        android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:textSize="18sp"/>
     <TextView
-        android:id="@+id/posTxt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/guideTxt"
         android:layout_below="@+id/descTxt"
-        android:layout_margin="10dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textSize="16sp"
+        android:text="Touch the desired color in the picture below"/>
     <LinearLayout
         android:id="@+id/colorLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/posTxt"
+        android:layout_below="@+id/guideTxt"
         android:orientation="horizontal"
         android:weightSum="100">
         <com.example.shaha.colorrecognizer.ColorPreview
@@ -70,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/colorLayout"
         android:scaleType="centerCrop"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
